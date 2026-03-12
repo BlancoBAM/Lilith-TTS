@@ -1,7 +1,11 @@
 [package]
-name = "lilim_tts"
+name = "lilith-tts"
 version = "0.1.0"
 edition = "2021"
+description = "Text-to-Speech engine for Lilith Linux"
+authors = ["Lilith Linux Team"]
+license = "MIT"
+repository = "https://github.com/BlancoBAM/Lilith-TTS"
 
 [dependencies]
 anyhow = "1.0"
@@ -9,6 +13,6 @@ serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 reqwest = { version = "0.11", features = ["json"] }
 tokio = { version = "1", features = ["full", "macros"] }
-hound = "3.5"  # WAV file generation
-llama_cpp_rs = "0.3"  # GGUF model loading
+hound = "3.5"
+llama_cpp_rs = "0.3"
 log = "0.4"
