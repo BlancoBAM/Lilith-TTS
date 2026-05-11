@@ -1,18 +1,24 @@
-[package]
-name = "lilith-tts"
-version = "0.1.0"
-edition = "2021"
-description = "Text-to-Speech engine for Lilith Linux"
-authors = ["Lilith Linux Team"]
-license = "MIT"
-repository = "https://github.com/BlancoBAM/Lilith-TTS"
+[workspace]
+members = [
+    "crates/tts-core",
+    "crates/tts-daemon",
+    "crates/tts-gui",
+]
+resolver = "2"
 
-[dependencies]
-anyhow = "1.0"
+[workspace.dependencies]
+# Async runtime
+tokio = { version = "1", features = ["full"] }
+
+# Serialization
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
-reqwest = { version = "0.11", features = ["json"] }
-tokio = { version = "1", features = ["full", "macros"] }
-hound = "3.5"
-llama_cpp_rs = "0.3"
-log = "0.4"
+toml = "0.8"
+
+# Error handling
+anyhow = "1.0"
+thiserror = "1.0"
+
+# Logging
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }

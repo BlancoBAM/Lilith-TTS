@@ -1,0 +1,29 @@
+[package]
+name = "tts-daemon"
+version = "0.1.0"
+edition = "2021"
+description = "Lilith-TTS background daemon: global hotkey, IPC server, TTS engine"
+
+[[bin]]
+name = "lilith-tts-daemon"
+path = "src/main.rs"
+
+[dependencies]
+tts-core = { path = "../tts-core" }
+
+tokio = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+anyhow = { workspace = true }
+tracing = { workspace = true }
+tracing-subscriber = { workspace = true }
+
+# Linux input event reading for hotkeys (works on X11 + Wayland)
+evdev = "0.12"
+
+# File locking (single instance)
+fs2 = "0.4"
+
+# Async utilities (CancellationToken)
+tokio-util = "0.7"
+

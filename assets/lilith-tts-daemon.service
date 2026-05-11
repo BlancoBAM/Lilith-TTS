@@ -1,0 +1,19 @@
+[Unit]
+Description=Lilith TTS Background Daemon
+Documentation=https://github.com/BlancoBAM/Lilith-TTS
+After=graphical-session.target
+PartOf=graphical-session.target
+
+[Service]
+Type=simple
+ExecStart=%h/.local/bin/lilith-tts-daemon
+Restart=on-failure
+RestartSec=3s
+Environment=RUST_LOG=info
+
+# Allow device input access for hotkey detection
+# Requires user to be in the 'input' group
+SupplementaryGroups=input
+
+[Install]
+WantedBy=graphical-session.target

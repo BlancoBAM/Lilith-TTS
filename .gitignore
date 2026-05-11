@@ -1,0 +1,15 @@
+/target
+/dist
+/build
+.claude/
+.cursor/
+.vibecheck/
+CLAUDE.md
+*.lock
+*.log
+.DS_Store
+*.deb
+*.gguf
+*.wav
+/crates/**/target
+/crates/**/dist
