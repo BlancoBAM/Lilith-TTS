@@ -36,6 +36,45 @@ HF_REPO="neuphonic/neutts-nano-q4"
 HF_FILENAME="neutts-nano-q4.gguf"
 HF_DIRECT_URL="https://huggingface.co/neuphonic/neutts-nano-q4/resolve/main/neutts-nano-q4.gguf"
 
+# ── Options Parsing ──────────────────────────────────────────────────────────
+
+ONLY_MODEL=false
+NON_INTERACTIVE=false
+
+show_help() {
+    echo "Usage: ./install.sh [options]"
+    echo ""
+    echo "Options:"
+    echo "  --only-model       Only check and download the NeuTTS Nano GGUF model"
+    echo "  --non-interactive  Run installation without prompting (use defaults)"
+    echo "  -h, --help         Show this help message"
+    echo ""
+}
+
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --only-model)
+            ONLY_MODEL=true
+            shift
+            ;;
+        --non-interactive)
+            NON_INTERACTIVE=true
+            shift
+            ;;
+        -h|--help)
+            show_help
+            exit 0
+            ;;
+        *)
+            echo "Unknown argument: $1"
+            show_help
+            exit 1
+            ;;
+    esac
+done
+
+if [[ "$ONLY_MODEL" == "false" ]]; then
+
 # ── Check build requirements ─────────────────────────────────────────────────
 
 step "Checking build environment..."
@@ -230,6 +269,8 @@ else
     fi
 fi
 
+fi # Close ONLY_MODEL conditional
+
 # ── NeuTTS Nano model ─────────────────────────────────────────────────────────
 
 step "Checking NeuTTS Nano model..."
@@ -251,12 +292,17 @@ else
 fi
 
 if [[ "$MODEL_FOUND" == "false" ]]; then
-    echo -e "  ${BOLD}Would you like to download the model now?${NC}"
-    echo "  [1] Yes — download to ${NEUTTS_MODEL_FILE} (recommended, requires sudo)"
-    echo "  [2] Yes — download to ${NEUTTS_MODEL_LOCAL} (user-local, no sudo)"
-    echo "  [3] No  — I'll add the model path manually in the app settings"
-    echo ""
-    read -rp "  Choice [1/2/3]: " model_choice
+    if [[ "$NON_INTERACTIVE" == "true" ]]; then
+        info "Non-interactive installation: downloading model to user-local destination..."
+        model_choice=2
+    else
+        echo -e "  ${BOLD}Would you like to download the model now?${NC}"
+        echo "  [1] Yes — download to ${NEUTTS_MODEL_FILE} (recommended, requires sudo)"
+        echo "  [2] Yes — download to ${NEUTTS_MODEL_LOCAL} (user-local, no sudo)"
+        echo "  [3] No  — I'll add the model path manually in the app settings"
+        echo ""
+        read -rp "  Choice [1/2/3]: " model_choice
+    fi
 
     case "${model_choice:-1}" in
         1)
