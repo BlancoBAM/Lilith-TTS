@@ -2,14 +2,13 @@
 Name=Lilith TTS
 GenericName=Text to Speech
 Comment=Lilith Linux system-wide TTS panel applet
-Exec=lilith-tts
-Icon=lilith-tts
 Type=Application
-Categories=Accessibility;Utility;
-Keywords=tts;text;speech;screen;reader;accessibility;
-StartupNotify=false
-NoDisplay=false
-
-# Autostart in user session
-X-GNOME-Autostart-enabled=true
-X-COSMIC-Panel-Icon=true
+Exec=lilith-tts
+Terminal=false
+StartupNotify=true
+NoDisplay=true
+Categories=COSMIC;Accessibility;Utility;
+Keywords=COSMIC;TTS;Text;Speech;Screen;Reader;Accessibility;
+Icon=io.lilith.LilithTts-symbolic
+X-CosmicApplet=true
+X-CosmicHoverPopup=Auto

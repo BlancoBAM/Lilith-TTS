@@ -96,13 +96,7 @@ fn monitor_device(mut device: Device, tx: broadcast::Sender<IpcAction>) {
             if matches!(key, Key::KEY_LEFTCTRL | Key::KEY_RIGHTCTRL) {
                 ctrl_held = value > 0;
                 if !ctrl_held {
-                    // Ctrl released — check if sequence is complete
-                    if sequence == [Key::KEY_T, Key::KEY_T, Key::KEY_M] {
-                        tracing::info!("Hotkey Ctrl+T+T+M triggered!");
-                        let _ = tx.send(IpcAction::Activate {
-                            mode: ActivateMode::Screen,
-                        });
-                    }
+                    // Ctrl released — clear any partial sequence
                     sequence.clear();
                 }
                 continue;
@@ -122,6 +116,15 @@ fn monitor_device(mut device: Device, tx: broadcast::Sender<IpcAction>) {
                         // Cap sequence length to avoid unbounded growth
                         if sequence.len() > 4 {
                             sequence.drain(..sequence.len() - 4);
+                        }
+                        // Fire immediately when the full sequence is complete
+                        // (more responsive than waiting for Ctrl release)
+                        if sequence == [Key::KEY_T, Key::KEY_T, Key::KEY_M] {
+                            tracing::info!("Hotkey Ctrl+T+T+M triggered (immediate)!");
+                            let _ = tx.send(IpcAction::Activate {
+                                mode: ActivateMode::Screen,
+                            });
+                            sequence.clear();
                         }
                     }
                     _ => {

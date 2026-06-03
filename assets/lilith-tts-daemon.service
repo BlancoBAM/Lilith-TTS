@@ -11,9 +11,5 @@ Restart=on-failure
 RestartSec=3s
 Environment=RUST_LOG=info
 
-# Allow device input access for hotkey detection
-# Requires user to be in the 'input' group
-SupplementaryGroups=input
-
 [Install]
 WantedBy=graphical-session.target

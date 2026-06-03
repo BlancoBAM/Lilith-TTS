@@ -2,7 +2,7 @@
 name = "tts-daemon"
 version = "0.1.0"
 edition = "2021"
-description = "Lilith-TTS background daemon: global hotkey, IPC server, TTS engine"
+description = "Lilith-TTS background daemon: global hotkey (Ctrl+T+T+M), IPC server, TTS engine"
 
 [[bin]]
 name = "lilith-tts-daemon"
@@ -17,13 +17,11 @@ serde_json = { workspace = true }
 anyhow = { workspace = true }
 tracing = { workspace = true }
 tracing-subscriber = { workspace = true }
+tokio-util = { workspace = true }
 
-# Linux input event reading for hotkeys (works on X11 + Wayland)
+# Linux input event reading for global hotkey (works on both X11 and Wayland)
+# Reads directly from /dev/input/event* — user must be in the 'input' group
 evdev = "0.12"
 
-# File locking (single instance)
+# File locking for single-instance daemon
 fs2 = "0.4"
-
-# Async utilities (CancellationToken)
-tokio-util = "0.7"
-

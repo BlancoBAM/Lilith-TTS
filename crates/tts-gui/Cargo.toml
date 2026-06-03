@@ -2,7 +2,7 @@
 name = "tts-gui"
 version = "0.1.0"
 edition = "2021"
-description = "Lilith-TTS panel GUI: popup controls, tray icon, settings"
+description = "Lilith-TTS COSMIC panel applet — popup controls and settings"
 
 [[bin]]
 name = "lilith-tts"
@@ -17,24 +17,24 @@ serde_json = { workspace = true }
 anyhow = { workspace = true }
 tracing = { workspace = true }
 tracing-subscriber = { workspace = true }
+tokio-util = { workspace = true }
+dirs = { workspace = true }
 
-# GUI — use tiny-skia (software renderer) to avoid wgpu/ashpd async conflict.
-# Perfectly fine for a small panel popup; no GPU required.
-iced = { version = "0.13", default-features = false, features = [
+# COSMIC applet framework
+libcosmic = { git = "https://github.com/pop-os/libcosmic.git", features = [
+    "applet",
+    "applet-token",
+    "dbus-config",
+    "multi-window",
     "tokio",
-    "image",
-    "advanced",
-    "tiny-skia",
+    "wayland",
+    "winit",
 ] }
 
-# System tray icon via StatusNotifierItem D-Bus protocol
-ksni = "0.2"
+# Fluent i18n — must match the template's exact versions
+i18n-embed = { version = "0.16", features = ["fluent-system", "desktop-requester"] }
+i18n-embed-fl = "0.10"
+rust-embed = "8.11"
 
-# File dialogs (for voice reference file picker)
+# File picker dialogs (voice reference + model file)
 rfd = { version = "0.15", default-features = false, features = ["tokio", "xdg-portal"] }
-
-# Unix socket client to talk to daemon
-tokio-util = { version = "0.7", features = ["codec"] }
-
-# Config paths
-dirs = "5.0"

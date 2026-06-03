@@ -1,4 +1,5 @@
-//! IPC client — sends commands to the running daemon over the Unix socket.
+// SPDX-License-Identifier: GPL-3.0-only
+//! IPC client — sends commands from the applet to the running daemon over a Unix socket.
 
 use anyhow::Result;
 use tokio::io::{AsyncBufReadExt, AsyncWriteExt, BufReader};
@@ -6,12 +7,14 @@ use tokio::net::UnixStream;
 
 use tts_core::ipc::{socket_path, IpcAction, IpcMessage};
 
-/// Send an action to the daemon. Fire-and-forget variant.
+/// Send an action to the daemon. Fire-and-forget (no reply expected).
 pub async fn send(action: IpcAction) -> Result<()> {
     let path = socket_path();
     let mut stream = UnixStream::connect(&path).await.map_err(|e| {
         anyhow::anyhow!(
-            "Cannot reach Lilith-TTS daemon ({}). Is it running?\nStart it with: lilith-tts-daemon &\nError: {}",
+            "Cannot reach Lilith-TTS daemon ({}). Is it running?\n\
+             Start it with: systemctl --user start lilith-tts-daemon\n\
+             Error: {}",
             path.display(),
             e
         )

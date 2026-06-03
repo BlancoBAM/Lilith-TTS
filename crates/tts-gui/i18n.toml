@@ -1,0 +1,7 @@
+fallback_language = "en"
+
+[fluent]
+assets_dir = "i18n"
+
+[localizations."en"]
+path = "i18n"

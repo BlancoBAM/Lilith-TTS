@@ -22,3 +22,9 @@ thiserror = "1.0"
 # Logging
 tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+
+# Async utilities
+tokio-util = { version = "0.7", features = ["codec"] }
+
+# Config paths
+dirs = "5.0"

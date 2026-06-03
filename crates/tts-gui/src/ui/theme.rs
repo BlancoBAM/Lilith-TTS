@@ -1,10 +1,13 @@
-// ─── Lilith TTS Color Palette ───────────────────────────────────────────────
-// Inspired by the Lilith icon: near-black background, deep blood red accents,
-// ember/flame highlights, and warm off-white text.
+// SPDX-License-Identifier: GPL-3.0-only
 
-use iced::Color;
+// ─── Lilith TTS Colour Palette ──────────────────────────────────────────────
+// Kept here as named constants that can be referenced from app.rs.
+// COSMIC applets use the system theme for most widgets; these colours are used
+// for custom-styled containers and text where brand identity matters.
 
-/// Window background — near-black with faint crimson undertone
+use cosmic::iced::Color;
+
+/// Window/popup background — near-black with faint crimson undertone
 pub const BG_DEEP: Color = Color {
     r: 0.027,
     g: 0.012,
@@ -69,20 +72,9 @@ pub const TEXT_MUTED: Color = Color {
 };
 
 /// Panel border — dark red
-pub const BORDER: Color = Color {
+pub const BORDER_COLOR: Color = Color {
     r: 0.239,
     g: 0.067,
     b: 0.031,
     a: 1.0,
 };
-
-/// Transparent
-pub const TRANSPARENT: Color = Color {
-    r: 0.0,
-    g: 0.0,
-    b: 0.0,
-    a: 0.0,
-};
-
-/// Custom iced theme marker (we use custom styles inline rather than a full theme)
-pub struct LilithTheme;
