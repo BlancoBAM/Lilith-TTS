@@ -111,6 +111,24 @@ else
     note "Install: sudo apt install -y pulseaudio-utils alsa-utils"
 fi
 
+# ── Install C build dependencies ──────────────────────────────────────────────
+
+step "Installing C build dependencies..."
+BUILD_DEPS=(pkg-config libxkbcommon-dev libwayland-dev libdbus-1-dev libasound2-dev)
+MISSING_DEPS=()
+for dep in "${BUILD_DEPS[@]}"; do
+    if ! dpkg -s "$dep" &>/dev/null 2>&1; then
+        MISSING_DEPS+=("$dep")
+    fi
+done
+if [ ${#MISSING_DEPS[@]} -gt 0 ]; then
+    note "Installing missing build dependencies: ${MISSING_DEPS[*]}"
+    sudo apt-get install -y "${MISSING_DEPS[@]}" || error "Failed to install build dependencies. Run: sudo apt install -y ${MISSING_DEPS[*]}"
+    info "Build dependencies installed"
+else
+    info "All C build dependencies present"
+fi
+
 # ── Build ────────────────────────────────────────────────────────────────────
 
 step "Building Lilith-TTS (release)..."
