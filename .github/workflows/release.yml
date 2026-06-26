@@ -1,0 +1,83 @@
+name: Build & Release Lilith-TTS
+
+on:
+  push:
+    branches: [main]
+    tags:
+      - 'v*'
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+env:
+  CARGO_TERM_COLOR: always
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-release:
+    name: Build & Package
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache Cargo registry
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target/
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            build-essential \
+            pkg-config \
+            libssl-dev \
+            libspeechd-dev \
+            libdbus-1-dev \
+            libasound2-dev \
+            libpipewire-0.3-dev \
+            libclang-dev \
+            clang \
+            cmake \
+            libgtk-3-dev \
+            libxdo-dev \
+            dpkg-dev
+
+      - name: Install cargo-deb
+        run: cargo install cargo-deb --locked
+
+      - name: Build release binaries
+        run: cargo build --release
+
+      - name: Rename binaries
+        run: |
+          cp target/release/lilith-tts lilith-tts-linux-amd64 2>/dev/null || true
+          cp target/release/lilith-tts-daemon lilith-tts-daemon-linux-amd64 2>/dev/null || true
+
+      - name: Build .deb packages
+        run: cargo deb --no-build -p tts-gui 2>/dev/null || echo "cargo-deb packaging skipped (no deb metadata)"
+
+      - name: Create GitHub Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+          files: |
+            lilith-tts-linux-amd64
+            lilith-tts-daemon-linux-amd64
+            target/debian/*.deb
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
